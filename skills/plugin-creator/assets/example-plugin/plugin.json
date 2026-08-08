@@ -1,0 +1,11 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "example-plugin",
+  "version": "1.0.0",
+  "description": "Reference Agent Plugins package: one skill plus a minimal stdio MCP server.",
+  "license": "MIT",
+  "author": {
+    "name": "plugin-creator"
+  },
+  "keywords": ["example", "reference"]
+}
