@@ -144,6 +144,13 @@ skill does and *when* to trigger it, that `name` equals the directory, that the
 body stays under ~500 lines with detail pushed into `scripts/`/`references/`/
 `assets/`, and that nothing leaks secrets or machine-specific paths.
 
+If the plugin targets more than one harness, also flag any `SKILL.md` that
+**hardcodes a client tool name** in instructional prose (`AskUserQuestion`,
+`TodoWrite`, `Task`/`subagent_type`, `general-purpose`, `Skill`, `Read`/`Write`/
+`Edit`/`Bash`/`Grep`/`Glob`, `WebFetch`/`WebSearch`) — those must be phrased as
+actions and resolved per harness via tool mapping (`references/tool-mapping.md`),
+or the skill only works on the one client whose vocabulary it names.
+
 For a plugin bundling several skills, spawn the `agents/plugin-reviewer.md`
 subagent to do this pass and report ranked findings. For a single skill, apply
 the same checklist inline.
@@ -185,6 +192,29 @@ can't drift from the core. See `references/adapters.md` for the mapping and how 
 add another client, and `references/install.md` for the exact install commands
 (git via `claude --plugin-url`, local via `claude --plugin-dir` or
 `~/.claude/skills/<name>/`). Omit `--target` for a pure agent-plugins-spec package.
+
+### Making it work on more than one harness (not just install)
+
+A spec-valid plugin can still be *non-functional* on a second harness: it validates
+(skills + MCP are portable), but its skills may speak a tool vocabulary only one
+client understands, and nothing auto-triggers them there. Real multi-harness
+readiness needs three things beyond the manifest, and the portable core stays clean
+because all three are additive/per-client:
+
+1. **Skills name actions, not tools.** Never hardcode a client tool name
+   (`AskUserQuestion`, `TodoWrite`, `Task`/`general-purpose`, `Skill`, `Read`/`Bash`/
+   `Grep`, …) in a `SKILL.md`. Write "ask the user", "dispatch a subagent", "create a
+   todo" instead. The translation lives per harness, not in the skill.
+2. **Tool mapping** — one `skills/using-<plugin>/references/<harness>-tools.md` per
+   harness, mapping each action to that client's real tool. See
+   `references/tool-mapping.md`.
+3. **Bootstrap** — the per-harness session-start injection that makes skills
+   auto-trigger. This is the actual integration; without it the skills are inert.
+   See `references/bootstrap.md`.
+
+Keep hooks/commands/bootstrap/store-metadata in the client adapter (they are not
+Agent Plugins v1 components); a harness that can't run them still works on the shared
+skills alone. The per-harness projection matrix is in `references/adapters.md`.
 
 ## Optional sidecar files
 
