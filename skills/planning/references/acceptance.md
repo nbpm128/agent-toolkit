@@ -31,7 +31,7 @@ burden of proof is on the work, not on your skepticism.
 ## When to run
 
 - A milestone's tasks are all `Done` and you are about to call the milestone complete.
-- The whole plan is claimed finished, before Phase 6 (Finishing).
+- The whole plan is claimed finished.
 - Anytime someone (you or the user) wants to declare readiness.
 
 ## The process
@@ -56,8 +56,9 @@ burden of proof is on the work, not on your skepticism.
    criteria PASSed. A requirement with no passing task is a FAIL, even if all tasks individually
    passed — the outcome the plan promised is not met. Flip the "Accepted" cell for that REQ in
    `plan.md` §6 to `yes` only when its evidence is in hand.
-6. **Write the acceptance record** to `plans/plan-<plan-name>/acceptance.md` (template in
-   `templates.md`), appending a dated section per certification run.
+6. **Write the acceptance record** to `plans/plan-<plan-name>/acceptance.md` — copy
+   `assets/acceptance.template.md` on the first run, then append a dated section per run
+   thereafter, never overwriting an earlier one.
 7. **Verdict:**
    - **All criteria PASS and every in-scope REQ covered** → certify: state the verdict WITH the
      evidence, mark the milestone accepted.
@@ -65,6 +66,18 @@ burden of proof is on the work, not on your skepticism.
      failure with its evidence, and route the gap back: reopen the owning task (`In Progress` or
      `Blocked`) via Phase 3, or add a new task via the Phase 2 conventions if the gap is unplanned
      work.
+
+## Close out the plan
+
+On an ACCEPTED verdict for the **whole plan**, leave the artifacts truthful and stop:
+
+- Every task at `status: done` in its frontmatter, and `validate_plan.py --check` exits 0.
+- Every in-scope `REQ` flipped to `Accepted: yes` in `plan.md` §6, each backed by this run.
+- One line appended to `plan.md` §9 Revision Log: date + "plan accepted".
+
+Then report completion with the evidence. **What happens to the work next — branching, commits,
+merges, PRs, deployment — is outside this workflow.** Do not offer it and do not perform it
+unless the user asks for it as ordinary work.
 
 ## Automatic-fail triggers
 
@@ -79,12 +92,16 @@ Any one of these forces NOT ACCEPTED, regardless of other results:
 
 ## What does NOT satisfy acceptance
 
-- "Tests should pass now" / re-reading the diff / "looks correct."
-- Output from an earlier session or a remembered result.
-- A green summary without the underlying command and its real output.
-- Linter passing used to claim the build passes (different checks prove different claims).
+Everything the Verification Gate rejects (`executing.md`) — plus one more: a linter passing is
+not a build passing. Different checks prove different claims; run the one the criterion names.
 
-## No performative closure
+State the verdict only after the checks run, and only with the evidence attached — no "Perfect!"
+or "All done!" before it is in hand.
 
-Do not express satisfaction ("Perfect!", "All done!") before the evidence is in hand. State the
-verdict only after the checks run, and only with the evidence attached.
+## Accepting a delegated task
+
+A sub-plan's acceptance run is certified against the **parent task's** Acceptance criteria, not
+criteria the sub-plan wrote for itself. Write the record to the sub-plan's `acceptance.md`, then
+copy its verdict line into the parent task's Progress Log — that is the evidence for the parent's
+`Delegated -> Done` transition. A sub-plan whose own tasks all pass but which misses a parent
+criterion is NOT ACCEPTED.

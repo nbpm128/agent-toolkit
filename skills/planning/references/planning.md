@@ -21,7 +21,8 @@ The *map* is deliberately separate from the *steps*:
 - **`tasks/_index.md` — the tracker.** The single source of truth for task status, grouped by
   status.
 
-Full templates: `templates.md` — read it before writing any file.
+Document rules: `templates.md` — read it before writing any file. The templates themselves are
+copied from `assets/`, never retyped.
 
 ## Process
 
@@ -37,19 +38,25 @@ Full templates: `templates.md` — read it before writing any file.
 3. **Map the work.** Before defining tasks, list what will be created/modified and the
    responsibility of each unit. Lock decomposition in here: units with clear boundaries, files
    that change together living together, one responsibility per file.
-4. **Draft `plan.md`** using the Roadmap template. Milestones are broad; each names the task(s)
-   that deliver it.
+4. **Draft `plan.md`** — copy `assets/plan.template.md` into the plan folder and fill it.
+   Milestones are broad; each names the task(s) that deliver it. The copy carries the
+   `<!-- BEGIN GENERATED -->` markers §7 needs; a hand-typed plan that omits them silently loses
+   its counts.
 5. **Right-size tasks.** A task is the smallest unit worth a fresh reviewer's gate and one
-   status transition (`Not Started -> In Progress -> Done`). Fold setup/config/scaffolding/docs
+   status transition (`not-started -> in-progress -> done`). Fold setup/config/scaffolding/docs
    into the task whose deliverable needs them. Split only where a reviewer could accept one and
    reject its neighbor. Each task ends with an independently verifiable deliverable. If a task
-   bundles unrelated changes, split it.
-6. **Write each `task_NNN_<slug>.md`** using the Task template. `NNN` is a zero-padded 3-digit
+   bundles unrelated changes, split it. If a milestone is too coarse to decompose into concrete
+   tasks with the data you have, do **not** write vague ones — write a single task carrying that
+   milestone's acceptance criteria and note in it that execution should open a **sub-plan**
+   (`executing.md` § Sub-plans).
+6. **Write each `task_NNN_<slug>.md`** — one copy of `assets/task.template.md` per task. `NNN` is a zero-padded 3-digit
    sequential integer in execution order (respecting dependencies); the number comes first so
    directory listings sort correctly. Every task starts at `Not Started`. Each task lists which
    `REQ-NNN` it satisfies and states its acceptance criteria in testable EARS form.
-7. **Write `tasks/_index.md`** grouped by status, and set `plan.md`'s Roadmap tracking line to
-   point at it with current counts.
+7. **Generate the index.** Do not write `tasks/_index.md` by hand — run
+   `python scripts/validate_plan.py <plan-dir> --sync`. It builds the index and `plan.md` §7's
+   counts from the task frontmatter.
 8. **Risk pass (pre-mortem).** For non-trivial or costly-to-reverse work, before self-review:
    assume the plan has **already failed** and reason backward — "it's after the deadline; the
    plan failed because ___." Sweep for concrete failure paths (technical, dependencies,
@@ -61,22 +68,14 @@ Full templates: `templates.md` — read it before writing any file.
 
 ## Proof-of-Concept path (Medium confidence)
 
-When research came in at Medium confidence, do **not** plan the whole thing up front. A PoC is a
-first-class outcome, not a warm-up:
+Do not plan the whole thing up front. M1 is a **thin vertical slice** whose measurable success
+criteria resolve the remaining uncertainty ("the third-party API returns X within budget"); the
+rest is a **deferred wave** — sketched in `plan.md`, not decomposed into tasks. Record both, plus
+the **decision point** after M1, so the executor knows the wave is gated:
 
-- The plan's first milestone is a **PoC / thin vertical slice** with its own explicit,
-  measurable **success criteria** — the specific thing whose outcome resolves the remaining
-  uncertainty (e.g. "the third-party API returns X within budget", "the migration runs on a copy
-  without data loss").
-- Mark the rest of the work as a **deferred wave** in `plan.md` — sketched, not fully decomposed
-  into tasks yet.
-- Add an explicit **decision point** after the PoC:
-  - **PoC validated** → expand the deferred wave into full tasks (a planning follow-up), carrying
-    forward what the PoC taught.
-  - **PoC failed / surprised us** → do **not** push on. Return to Phase 1 with the new evidence;
-    the chosen approach may be wrong.
-- Record the PoC's success criteria and the decision point in `plan.md` so the executor knows the
-  wave is gated, not optional.
+- **PoC validated** → expand the wave into full tasks, carrying forward what the PoC taught.
+- **PoC failed** → do not push on. Return to Phase 1 with the new evidence; the approach may be
+  wrong.
 
 ## Open questions are chat blockers
 
@@ -111,17 +110,11 @@ paths, commands, and acceptance criteria.
 Score the draft; revise on any FAIL, stop after all pass or 3 iterations (record leftover gaps in
 `plan.md` §8 Open Questions):
 
-- **Requirement coverage** — every `REQ-NNN` in `research.md` maps to at least one task. List any
-  orphan requirement. No task should exist that maps to no requirement (that is scope creep — cut
-  it or trace it).
-- **No temporal paradoxes** — no task consumes data, a file, an interface, or an output that no
-  earlier task (per `Depends on`) produces. Walk the dependency order and check.
-- **Dependency contracts** — every `Depends on` edge names the concrete thing consumed (exact
-  function/file/endpoint/schema), and the producing task's deliverable actually provides it. Flag
-  interface mismatches.
-- **Deterministic acceptance** — every task's Acceptance/Verification is measurable (a command
-  with expected output, or a checkable end state). Reject vague criteria like "works" or "looks
-  right".
+- **Dependency contracts** — every `depends_on` edge names the concrete thing consumed (exact
+  function/file/endpoint/schema), and the producing task's deliverable actually provides it. The
+  script proves the edge exists; only you can see whether the interface matches.
+- **Deterministic acceptance** — every criterion is measurable. The script rejects an empty or
+  command-less section; you reject "works" and "looks right".
 - **Risks bound** (non-trivial plans) — each top pre-mortem failure path maps to a concrete gate
   or task; none left as an abstract note.
 - **No placeholders** — none of the red-flag patterns above survive.
@@ -129,14 +122,18 @@ Score the draft; revise on any FAIL, stop after all pass or 3 iterations (record
   task 7.
 - **Task atomicity** — each task is one status transition with an independently verifiable
   deliverable.
-- **Index integrity** — `_index.md` lists every task exactly once; `plan.md` counts match it.
+- **Script-checked** — `validate_plan.py --check` exits 0. It covers requirement coverage, orphan
+  tasks, dangling and cyclic `depends_on`, done-before-its-dependency, placeholders left in
+  Instructions, empty or command-less acceptance criteria, and delegation symmetry. Run it first,
+  then judge by hand only what a script cannot: whether the acceptance criteria are the *right*
+  ones, whether task boundaries are sensible, and whether the naming is coherent.
 
 ## Handoff
 
 After writing all files:
 
 > "Roadmap and N tasks written under `plans/plan-<plan-name>/`. Status:
-> `0 Done / 0 In Progress / N Not Started / 0 Blocked`. Ready to start — shall I execute the
-> first task?"
+> `0 Done / 0 In Progress / N Not Started / 0 Blocked / 0 Delegated`. Ready to start — shall I
+> execute the first task?"
 
 Do not begin executing from this phase — that is Phase 3 (`executing.md`).
