@@ -18,9 +18,9 @@ date: YYYY-MM-DD
 Existing patterns to follow, constraints, prior art, extension points.]
 
 ## 3. Q&A Log
-| Question | Decided answer |
+| Question | Answer |
 |---|---|
-| {{question}} | {{answer}} |
+| {{question}} | {{answer — for a fact about a system outside this repository, mark it unconfirmed unless a call to that system in this session verified it, and add it to §8}} |
 
 ## 4. Approaches Considered
 | Approach | Shape / where it lives | Strengths | Weaknesses | Cost / reversibility |
@@ -49,8 +49,9 @@ inherited parent REQs first and numbers new ones REQ-{{parent task}}.{{n}}.]
 | {{question}} | REQ-00X / an approach / planning as a whole |
 
 ## 8. Unconfirmed Assumptions
-[Proceeded on because the user said "proceed" or skipped a question. Planning and execution must
-watch these; the user may still overturn them. "None." is valid.]
+[Proceeded on because the user said "proceed", skipped a question, or answered one with a fact
+about an outside system that no call in this session verified. Planning and execution must watch
+these; the user may still overturn them. "None." is valid.]
 
 | Assumption | Relates to |
 |---|---|

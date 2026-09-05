@@ -3,7 +3,7 @@ type: acceptance
 plan: plan-{{plan-name}}
 ---
 
-# Acceptance Record — plan-{{plan-name}}
+# Acceptance: plan-{{plan-name}}
 
 > Evidence-based certification. Each run records what was checked, with which command, and what
 > actually came back.

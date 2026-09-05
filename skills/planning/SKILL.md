@@ -97,6 +97,10 @@ Density:
 - A prose block runs at most 4 lines. Past that, switch form.
 - Three consecutive bullets each carrying two or more facts are a table trying to happen.
 - A list past ~7 items needs sub-headings, or it is a table.
+- **Any recap of more than ~3 related facts defaults to a table** — REQ ids, assumptions paired
+  with their risk, options paired with trade-offs. This applies most to the recurring recap points
+  (`research.md` §9 disclosure, `planning.md` § Handoff disclosure, a Discuss recap) — they are
+  exactly where a wall of bolded prose bullets tends to creep in.
 - Paths and commands belong in a `Files` block, a table column, or a fenced block — not scattered
   through a paragraph.
 
@@ -109,11 +113,19 @@ Density:
 
 ## Hard gates
 
+A gate's controlling status is set only by the user's own explicit, unambiguous statement —
+never inferred from continued discussion, refinement requests, or an autonomous/auto-run mode
+that biases toward not stopping. An approval gate is precisely the "decision only the user can
+make" that such a mode must still stop for — **discussing** a document is not the same as
+**accepting** it, however long the discussion runs.
+
 - **Research → Planning.** Research writes *only* `research.md` — no plan, no task files, no
-  scaffolding, no code. The handoff happens only after the **user approves** it.
+  scaffolding, no code. At the end the user is offered three explicit outcomes — continue
+  research, discuss, or accept (`research.md` § User decision gate) — and the handoff to Phase 2
+  happens only on **accept**.
 - **Planning → Executing.** Planning writes *only* `plan.md` and `tasks/*`. It does not start the
-  work. If `research.md` is missing or its frontmatter is not `status: approved`, go back to
-  research — never invent it.
+  work. The same three-way gate applies at its end (`planning.md` § Handoff). If `research.md` is
+  missing or its frontmatter is not `status: approved`, go back to research — never invent it.
 - **Executing → Done.** No task reaches `Done` without **fresh command evidence produced in this
   session** (the Verification Gate, `references/executing.md`).
 - **Acceptance.** Starts from **NOT ACCEPTED**; only evidence earns the upgrade.

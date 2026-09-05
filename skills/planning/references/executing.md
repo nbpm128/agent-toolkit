@@ -54,8 +54,10 @@ canonical for the whole workflow; acceptance (Phase 5) reuses it.
 Two things must pass, in this order:
 
 1. `python scripts/validate_plan.py <plan-dir> --check` exits 0. It proves the plan is
-   *structurally* sound — REQ coverage, dependency graph, no placeholders left in Instructions,
-   delegation symmetry. It says nothing about whether the code works.
+   *structurally* sound — REQ coverage, dependency graph, done-before-its-dependency, delegation
+   symmetry, non-empty Acceptance sections. It no longer scans for placeholder-shaped text (that
+   heuristic produced false positives) and says nothing about whether the code works — judge
+   prose completeness by hand.
 2. The task's own Acceptance/Verification commands produce the evidence below. This is what
    proves the work.
 
@@ -89,9 +91,14 @@ Three outcomes, and picking the right one matters:
 
 | Situation | Outcome |
 |---|---|
+| **Contradicted** — reality disagrees with what the task or research assumed | Stop, state the contradiction, and ask the user — using `research.md § Asking`'s form. The answer decides which row below applies, or whether a new task is needed (*New work discovered mid-execution*, below). |
 | **Ambiguous** — two readings diverge, or a dependency/tool is missing | `status: blocked` plus `--sync`, with a Progress Log note explaining why; then ask the user. |
 | **Shallow** — the task is a project in itself: several deliverables, its own unknowns | Offer a **sub-plan** (below). |
 | **Wrong** — an upstream decision or `REQ` is false | Backward revision (below). |
+
+**Contradicted is not the same as Wrong.** A contradiction only tells you reality differs from
+the assumption — not yet *how* the plan should change. Ask before choosing; do not skip straight
+to a backward revision on your own read of what the answer will be.
 
 **Unblocking.** When the user resolves a blocker, append a dated Progress Log entry naming the
 resolution, set `status:` back to `not-started` (work not begun) or `in-progress` (work resumes),
@@ -135,7 +142,10 @@ tasks/
   shallow>. Sub-plan: <path>.`
 
 **Then run Phase 1 for the sub-plan** (`research.md` § Research for a sub-plan) and Phase 2 for
-its Roadmap, scoped to that task.
+its Roadmap, scoped to that task. The sub-plan's `plan.md §3` Global Constraints inherit the
+parent's verbatim — marked `Inherited: <constraint> (from ../../plan.md)` — before any constraints
+specific to the sub-plan are added; the same inheritance pattern `research.md` already applies to
+REQs.
 
 **Rollup — this is what keeps status honest:**
 

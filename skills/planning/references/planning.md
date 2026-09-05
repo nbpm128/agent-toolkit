@@ -77,6 +77,10 @@ the **decision point** after M1, so the executor knows the wave is gated:
 - **PoC failed** → do not push on. Return to Phase 1 with the new evidence; the approach may be
   wrong.
 
+If Medium confidence is driven by an unconfirmed external fact (`research.md`'s External
+verification driver), `task_001` **is** the probe: a call to the real system, verified under the
+Verification Gate like any other task, before anything else in the slice is built on top of it.
+
 ## Open questions are chat blockers
 
 If `research.md` left unresolved questions (its §7), or planning surfaces new ones, do **not**
@@ -122,18 +126,38 @@ Score the draft; revise on any FAIL, stop after all pass or 3 iterations (record
   task 7.
 - **Task atomicity** — each task is one status transition with an independently verifiable
   deliverable.
-- **Script-checked** — `validate_plan.py --check` exits 0. It covers requirement coverage, orphan
-  tasks, dangling and cyclic `depends_on`, done-before-its-dependency, placeholders left in
-  Instructions, empty or command-less acceptance criteria, and delegation symmetry. Run it first,
-  then judge by hand only what a script cannot: whether the acceptance criteria are the *right*
-  ones, whether task boundaries are sensible, and whether the naming is coherent.
+- **Script-checked** — `validate_plan.py --check` exits 0. It covers requirement coverage,
+  orphan tasks, dangling and cyclic `depends_on`, done-before-its-dependency, delegation
+  symmetry, and Acceptance sections that are non-empty — not whether their content is *right*,
+  and not whether placeholder-shaped text survives in Instructions (that heuristic is dropped;
+  it produced false positives). Run it first, then judge by hand only what a script cannot:
+  whether the acceptance criteria are the *right* ones, whether task boundaries are sensible,
+  whether Instructions carry real content rather than vague placeholders, and whether naming is
+  coherent.
 
 ## Handoff
 
-After writing all files:
+Disclosure before acceptance is ever offered — same two-step gate as `research.md` § User decision
+gate, applied here:
 
-> "Roadmap and N tasks written under `plans/plan-<plan-name>/`. Status:
-> `0 Done / 0 In Progress / N Not Started / 0 Blocked / 0 Delegated`. Ready to start — shall I
-> execute the first task?"
+a. **Disclose, in chat, every time**, before offering any outcome: every entry in `plan.md` §8
+   Open Questions, every entry in §5a Risks & Gates (or say plainly that §5a was omitted as the
+   plan is small and cheaply reversible), and any design call made unilaterally while planning.
+   "None." is a valid value, but say it — never skip this because the lists are empty.
+b. **Only after the user has reacted to that disclosure**, present:
 
-Do not begin executing from this phase — that is Phase 3 (`executing.md`).
+   > "Roadmap and N tasks written under `plans/plan-<plan-name>/`. Status:
+   > `0 Done / 0 In Progress / N Not Started / 0 Blocked / 0 Delegated`. What next — **continue
+   > planning** (adjust milestones/tasks), **discuss** (a specific task, REQ, or boundary), or
+   > **accept the plan** and start executing?"
+
+   - **Continue planning** — resume at the relevant step (right-size tasks, risk pass,
+     self-review).
+   - **Discuss** — recap milestones / REQ->task mapping / Global Constraints beyond what (a)
+     already surfaced; answer whatever the user probes on the merits, amend `plan.md` / task files
+     in place if it changes something, then repeat from (a).
+   - **Accept the plan** — only this starts Phase 3.
+
+Continued discussion, more questions, silence, and a reply that only reacts to (a) without saying
+accept are all read the same way: not yet. Do not begin executing from this phase — that is
+Phase 3 (`executing.md`).

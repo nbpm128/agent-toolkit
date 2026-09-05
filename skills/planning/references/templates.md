@@ -40,8 +40,13 @@ in full.
 Copying is not optional bookkeeping. `plan.md` carries `<!-- BEGIN GENERATED -->` markers that
 the sync script writes into; a hand-typed plan that omits them silently loses its counts.
 
-**Leftover placeholders are a plan failure.** `validate_plan.py --check` scans for them, but it
-only catches what it can see — read your filled artifact once before handing it on.
+**Leftover placeholders are a plan failure.** Catching them in prose is a manual/reviewer
+responsibility — `validate_plan.py --check` does not scan text for placeholder-shaped patterns
+(that heuristic produced false positives, e.g. matching ordinary array-literal code). It does
+still enforce the structural facts around it: every REQ has a task, every `depends_on` resolves
+and is acyclic, no task is `done` before its dependency, delegation is symmetric, and Acceptance
+isn't empty. Read your filled artifact once before handing it on, and rely on a fresh reviewer
+as the backstop for prose quality.
 
 ## Folder layout
 
@@ -81,6 +86,10 @@ A reader who arrives cold must know what they are holding before they start read
 | Purpose line | **One** line, in a blockquote: what this is and what happens next — not a summary of the contents. |
 | Sections | Numbered, and the numbers are **stable** — other documents cite them (`plan.md §5`), so renumbering breaks references. |
 
+**Exception:** `acceptance.md` is an append-only dated log, not a fixed set of numbered sections —
+each certification run gets its own dated `##` heading instead (see § Field rules below). Its `#`
+title also drops the trailing numbered-section body for the same reason.
+
 ## Generated blocks
 
 Two places are written by `scripts/validate_plan.py --sync` and must never be edited by hand:
@@ -103,11 +112,17 @@ protocol — there is nothing to keep in sync by hand.
 - `status: draft` until the user approves it; Phase 2 refuses to plan from a draft.
 - `confidence:` is the number Phase 2 reads to pick its strategy — full plan, PoC slice, or back
   to research.
+- §8 holds unconfirmed **external facts** too, not only skipped questions — a fact about a system
+  outside the repository that no call in this session verified belongs there, marked unconfirmed
+  in §3 rather than decided (`research.md` § Confidence, External verification driver).
 - §5 gives every requirement a stable `REQ-NNN`. A sub-plan lists inherited parent REQs first and
   numbers new ones `REQ-<parent task>.<n>`.
 
 **`plan.md`**
 
+- Frontmatter `type: roadmap`, not `type: plan`, is deliberate — `plan.md` is called *the Roadmap*
+  specifically to distinguish this one document from *the plan*, the whole `plan-<name>/` effort
+  (research + plan + tasks + acceptance).
 - §6 "Accepted" flips to `yes` only with acceptance evidence — never at planning time.
 - §7's counts are generated. Run `--sync`; never type them.
 - Append a row to §9 on every revision.

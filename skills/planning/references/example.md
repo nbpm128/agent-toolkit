@@ -112,8 +112,10 @@ The gap between a task that passes review and one that is actually executable in
 
 The left column is not *wrong* — it is unfinished. It defers the decision to whoever executes,
 which is exactly what the plan exists to prevent. Every left-column step passes a superficial
-read of the template; none survives `validate_plan.py --check` plus a reviewer who never saw the
-conversation.
+read of the template; none survives a reviewer who never saw the conversation —
+`validate_plan.py --check` no longer scans for this; it only enforces the structural facts (REQ
+coverage, dependency graph, delegation symmetry, non-empty Acceptance), so catching vague prose
+is the reviewer's job.
 
 ---
 
