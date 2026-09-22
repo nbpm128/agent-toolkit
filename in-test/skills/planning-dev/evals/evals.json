@@ -1,0 +1,58 @@
+{
+  "skill_name": "planning-dev",
+  "evals": [
+    {
+      "id": 1,
+      "name": "fuzzy-feature-request-enters-research",
+      "prompt": "we need to add rate limiting to our public API before the marketing push next month. right now anyone can hammer /v1/search as hard as they want and it took prod down twice last week. no idea yet whether we do it in nginx or in the app, and we have both a redis and a postgres already. can you figure out the right approach and get us to a plan we can actually hand to someone",
+      "expected_output": "Announces Phase 1, picks a kebab-case plan name and says it, runs an option-based interview whose round 1 carries a Complexity line and question 1 about the goal, verifies claims about the repo with tool calls rather than assuming, presents 2-3 approaches in the required table with a recommendation, and stops at the disclosure + decision gate without writing plan.md or any task file.",
+      "assertions": [
+        "No file other than plans/plan-<name>/research.md is created",
+        "Round 1 contains a Complexity line and a question 1 about the goal with exactly one star option",
+        "Every option carries a one-line consequence",
+        "A disclosure listing open questions, unverified assumptions and unasked design calls is shown before any accept is offered",
+        "status: approved is not set without an explicit accept from the user"
+      ],
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "resume-existing-plan-states-where-it-stopped",
+      "prompt": "read plan api-rate-limit and tell me where we stopped",
+      "expected_output": "Reads the plan folder, matches it against the router's state table, states where work stopped in one or two sentences with the task counts and the next ready task, and continues in that phase without asking permission.",
+      "assertions": [
+        "The reply names the phase the plan is in and the next ready task",
+        "Blocked tasks are listed separately, each with the last Progress Log entry as the reason",
+        "No question about which plan is asked, because the user named it",
+        "Statuses are read from task frontmatter, not from tasks/_index.md"
+      ],
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "single-small-change-declines-the-workflow",
+      "prompt": "the timeout in client.py is 5 seconds and it should be 30, can you just change it",
+      "expected_output": "Recognises a single small change with no open decision, says so, makes the change directly, and does not create a plan folder or run any phase.",
+      "assertions": [
+        "No plans/ folder is created",
+        "No phase is announced",
+        "The change itself is made"
+      ],
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "task-reaches-done-only-with-fresh-evidence",
+      "prompt": "run the next task in plan api-rate-limit",
+      "expected_output": "Shows the task entry menu with four items, re-verifies the Files table paths before executing, does the work itself, runs the validator and the task's own Acceptance commands, dispatches a fresh reviewer before done, and writes a Progress Log entry holding the literal command and its real output.",
+      "assertions": [
+        "The entry menu is shown before the loop starts and only 'execute' starts it",
+        "validate_plan.py --check is run and exits 0 before status done is set",
+        "The task's own Acceptance command is run and its literal output appears in the Progress Log",
+        "A review is run before done, with no exemption for a task that looks trivial",
+        "No 'should work' or summary-only claim is written as evidence"
+      ],
+      "files": []
+    }
+  ]
+}
