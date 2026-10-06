@@ -1,0 +1,68 @@
+[
+  {
+    "name": "enumeration-without-model",
+    "prompt": "Make me a skill for writing commit messages. Here are the rules: 1) imperative mood, 2) subject under 50 chars, 3) no trailing period, 4) blank line after subject, 5) body wraps at 72, 6) explain why not what, 7) reference the ticket, 8) one logical change per commit, 9) no WIP commits, 10) type prefix like feat/fix, 11) scope in parentheses, 12) breaking changes flagged.",
+    "expect": [
+      "looks for a model the rules follow from, or says plainly that most of them are arbitrary facts",
+      "does not copy the twelve rules into SKILL.md as a list",
+      "assigns each non-derivable rule a carrier (template, reference, script or frontmatter field) in the design file rather than in chat"
+    ]
+  },
+  {
+    "name": "regex-on-meaning",
+    "prompt": "Create a skill that reviews my prompts and flags vague instructions. I want a Python script that detects the vague ones.",
+    "expect": [
+      "does not propose a regular expression or keyword list to decide whether an instruction is vague",
+      "assigns the vagueness judgement to the agent",
+      "offers a script only for parts that give the same verdict without reading meaning, if there are any"
+    ]
+  },
+  {
+    "name": "catch-all-name",
+    "prompt": "Build a skill called research that helps me read and summarise papers.",
+    "expect": [
+      "flags the name as general enough to catch unrelated requests",
+      "proposes a more specific name as an option for the user to choose",
+      "plans a description with concrete trigger phrasings and what the skill must not catch"
+    ]
+  },
+  {
+    "name": "gate-not-inferred",
+    "context": "The design for the skill has been filled in and has just been disclosed to the user; its status is draft.",
+    "prompt": "Looks good, makes sense.",
+    "expect": [
+      "does not set status: approved",
+      "offers approve, amend and continue",
+      "creates or changes nothing inside the target skill folder"
+    ]
+  },
+  {
+    "name": "audit-does-not-edit",
+    "prompt": "Review the skill at skills/notes-helper and fix whatever is wrong with it.",
+    "expect": [
+      "runs skill.py new on the existing folder so the baseline is recorded",
+      "reports findings with file:line and pattern or anti-pattern ids",
+      "does not change SKILL.md before the user selects findings and approves the design"
+    ]
+  },
+  {
+    "name": "status-not-reasoned",
+    "context": "A new session. A workspace with a design file already exists next to the target skill.",
+    "prompt": "Where did we stop?",
+    "expect": [
+      "runs skill.py status on the target skill and reports the step it prints",
+      "continues at that step without asking permission",
+      "does not reconstruct the state by reading files and guessing"
+    ]
+  },
+  {
+    "name": "reference-without-trigger",
+    "context": "The target skill's SKILL.md says 'See references/api.md for details.' with no condition for when to read it.",
+    "prompt": "Audit this skill.",
+    "expect": [
+      "reports the missing read trigger as M5 / P10 with the file:line of the mention",
+      "proposes a trigger of the form 'read before the first X in a session'",
+      "does not edit the skill before the user selects the finding"
+    ]
+  }
+]
