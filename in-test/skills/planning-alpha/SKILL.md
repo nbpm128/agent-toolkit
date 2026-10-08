@@ -11,11 +11,11 @@ Every task is a folder, `tasks/task_NNN_<slug>/task.md`. A task can also hold a 
 
 A task is written before it runs. Writing puts it on disk, complete enough for an agent that was not in the room; running changes the repository and ends with evidence.
 
-The script lays out every file and folder; you fill them. Artifacts are written in the user's language.
+The script lays out every file and folder; you fill them.
 
 ## The header
 
-Open every message with the two lines `plan.py status` prints first. While the header names `research` or `plan`, nothing outside `plans/` is created, changed or deleted.
+Open every message with the two lines `plan.py status` prints first, in the user's language for everything but the field names. While the header names `research` or `plan`, nothing outside `plans/` is created, changed or deleted.
 
 ## Where you are
 
