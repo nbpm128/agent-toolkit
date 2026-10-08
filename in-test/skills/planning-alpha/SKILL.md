@@ -1,6 +1,6 @@
 ---
 name: planning-alpha
-description: Plans work before building it — research the ground, settle the route with the user, write tasks one at a time, and run each only when it is proven by a command in this session. Plans nest: any task can get a plan of its own in its folder. Use at the start of a feature, refactor, infrastructure change or multi-step task, and whenever the user asks to research an approach, plan a feature, break work into tasks, split a task, make a plan for a task, read or resume a plan ("read plan X", "where did we stop"), see what can run now, run a task, or check that something is really done. Not for a single small change with no open decision. Works in whatever language the user writes in.
+description: Plans work before building it — research the ground, settle the route with the user, write tasks one at a time, and run each only when it is proven by a command in this session. Plans nest — any task can get a plan of its own in its folder. Use at the start of a feature, refactor, infrastructure change or multi-step task, and whenever the user asks to research an approach, plan a feature, break work into tasks, split a task, make a plan for a task, read or resume a plan ("read plan X", "where did we stop"), see what can run now, run a task, or check that something is really done. Not for a single small change with no open decision. Works in whatever language the user writes in.
 ---
 
 # Planning Alpha
