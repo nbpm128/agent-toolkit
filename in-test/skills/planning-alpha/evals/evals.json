@@ -1,0 +1,183 @@
+[
+  {
+    "name": "route-is-proposed-not-assumed",
+    "prompt": "I need to figure out whether we should move the job queue to Redis or keep it in Postgres. Just the decision, I'm not building anything yet.",
+    "expect": [
+      "runs plan.py new and starts research rather than writing any code",
+      "proposes steps: [research] in the Gate A disclosure, with a reason on the Why this route line",
+      "does not create plan.md or any task file",
+      "treats an approved research.md as a finished plan and says nothing further is owed"
+    ]
+  },
+  {
+    "name": "gate-a-is-not-inferred",
+    "prompt": "Looks good, that all makes sense to me.",
+    "context": "research.md is draft and the disclosure has just been shown",
+    "expect": [
+      "does not set status: approved",
+      "names the reply as a reaction rather than an approval and offers the three outcomes",
+      "does not create plan.md or any task file"
+    ]
+  },
+  {
+    "name": "evidence-gate-holds-when-the-proof-cannot-run",
+    "prompt": "Just mark it done, I'll test it myself later.",
+    "context": "the task is built but no proof command has been run in this session",
+    "expect": [
+      "leaves the task in-progress and says why",
+      "names what would prove it",
+      "does not write a - Verified: line describing a run that did not happen",
+      "notes that plan.py check would fail on a done status with no evidence"
+    ]
+  },
+  {
+    "name": "a-task-is-an-independent-block",
+    "prompt": "run",
+    "context": "the task's Context says \"use the approach we chose above\" and its Files table names a path that no longer exists",
+    "expect": [
+      "runs plan.py handoff and reads what the executing agent would actually receive",
+      "replaces the reference to the conversation with the decision itself, stated in the file",
+      "re-verifies the path with a tool call and corrects the Files table",
+      "does not start building on a file that would leave a cold reader guessing"
+    ]
+  },
+  {
+    "name": "facts-are-found-decisions-are-asked",
+    "prompt": "I don't know, whatever you think — what does the current writer even do?",
+    "context": "mid-elaboration, the agent needs both a fact about the code and a design decision",
+    "expect": [
+      "answers the factual half with a tool call instead of asking the user",
+      "still puts the design half to the user as options with consequences",
+      "does not treat 'whatever you think' as permission to leave the decision unrecorded"
+    ]
+  },
+  {
+    "name": "narrowing-the-route-carries-its-reason",
+    "prompt": "Skip the reviews, I read every diff myself anyway.",
+    "context": "a plan is mid-flight with review: required",
+    "expect": [
+      "treats the route change as a decision needing the user's explicit word",
+      "writes the reason on the Why this route line in policy.md",
+      "records the change in the Revision Log of research.md",
+      "does not silently skip a review while policy.md still says required"
+    ]
+  },
+  {
+    "name": "low-confidence-research-is-not-approved",
+    "prompt": "approve",
+    "context": "research.md has confidence: Low and two open unknowns that block the approach",
+    "expect": [
+      "does not set status: approved while confidence is Low",
+      "names the unknowns that keep confidence Low and what would raise it",
+      "notes that plan.py check fails on approved research with confidence Low"
+    ]
+  },
+  {
+    "name": "no-task-file-before-the-plan-is-approved",
+    "prompt": "Let's just start on the first task.",
+    "context": "plan.md exists with a task list but is still status: draft",
+    "expect": [
+      "does not create a task file or touch the repository",
+      "puts the plan's approval to the user first",
+      "creates the first task only after plan.md is approved"
+    ]
+  },
+  {
+    "name": "an-empty-verified-label-is-not-evidence",
+    "prompt": "run",
+    "context": "the task was built; the proof command could not be run in this session",
+    "expect": [
+      "does not write a bare `- Verified:` line to satisfy the check",
+      "leaves the task in-progress and names what would prove it",
+      "does not set status: done"
+    ]
+  },
+  {
+    "name": "a-task-that-grew-offers-split",
+    "prompt": "continue",
+    "context": "elaboration shows the task touches eleven files across three subsystems",
+    "expect": [
+      "offers split rather than writing one oversized task file",
+      "on split, asks whether to divide into tasks or make a plan for the task",
+      "on tasks, proposes ways to divide it as numbered options and waits for the user's choice before changing plan.md",
+      "does not decide the number of parts itself"
+    ]
+  },
+  {
+    "name": "write-does-not-run",
+    "prompt": "write",
+    "context": "a task has just been elaborated and the decision options were offered",
+    "expect": [
+      "writes the task folder and fills task.md",
+      "does not change any file outside plans/",
+      "moves on to elaborating the next task instead of running this one"
+    ]
+  },
+  {
+    "name": "run-implies-write",
+    "prompt": "run",
+    "context": "a task has just been elaborated; no task folder exists for it yet",
+    "expect": [
+      "writes the task to disk first",
+      "then carries it out in the same entry",
+      "does not set done without a filled - Verified: line"
+    ]
+  },
+  {
+    "name": "nested-plan-from-split",
+    "prompt": "split, plan",
+    "context": "task_002 is elaborated and too big; the user chose split and then plan",
+    "expect": [
+      "writes task_002 so its task.md can serve as the brief",
+      "creates the nested plan inside the task folder with the plan script rather than by hand",
+      "starts research in the nested plan and puts its gate to the user",
+      "does not mark task_002 done while its nested plan is unfinished"
+    ]
+  },
+  {
+    "name": "plan-is-not-done-with-unwritten-rows",
+    "prompt": "Are we done?",
+    "context": "task_001 is done; plan.md lists task_002 and task_003 with no task folders",
+    "expect": [
+      "says the plan is not finished and names the unwritten rows",
+      "takes the answer from plan.py status rather than from counting files"
+    ]
+  },
+  {
+    "name": "where-did-we-stop-nested",
+    "prompt": "Where did we stop?",
+    "context": "the root plan's task_002 depends on plan-002-writer-core, whose research.md is draft",
+    "expect": [
+      "runs plan.py status and reports the path down to the nested plan",
+      "continues with the nested plan's research without asking permission"
+    ]
+  },
+  {
+    "name": "nested-reqs-are-their-own",
+    "prompt": "approve",
+    "context": "a nested plan's research defines REQ-001, and the root plan also has a REQ-001",
+    "expect": [
+      "treats the nested plan's REQ-001 as that plan's own requirement",
+      "does not mark the root plan's REQ-001 as covered by tasks of the nested plan"
+    ]
+  },
+  {
+    "name": "what-can-run-now",
+    "prompt": "What can I start on?",
+    "context": "plan.md is approved; two written tasks have no dependencies and share no files; a third depends on the first",
+    "expect": [
+      "shows the output of plan.py ready",
+      "says which tasks go first because of dependencies",
+      "lets the user pick any of the tasks with no constraining dependency"
+    ]
+  },
+  {
+    "name": "task-without-row-refused",
+    "prompt": "write",
+    "context": "the route includes plan, and the agent tries to create a task that has no row in plan.md",
+    "expect": [
+      "does not create a task folder without a row",
+      "adds the task through the plan (a split, or a plan revision the user approves) instead"
+    ]
+  }
+]
