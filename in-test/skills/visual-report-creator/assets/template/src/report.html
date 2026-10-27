@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{Report title}}</title>
+<link rel="stylesheet" href="static/theme.css">
+<link rel="stylesheet" href="static/base.css">
+<script src="static/mermaid.min.js"></script>
+<script src="static/echarts.min.js"></script>
+<script src="static/components.js"></script>
+</head>
+<body>
+
+<r-cover title="{{Report title}}" subtitle="{{One line: what the reader learns}}" date="{{YYYY-MM-DD}}"></r-cover>
+
+<r-summary title="{{Outline row 1: the answer in one line}}">
+  <r-line kind="what"><p>{{What happened, in one sentence}}</p></r-line>
+  <r-line kind="meaning"><p>{{What it means for the reader}}</p></r-line>
+  <r-line kind="action"><p>{{What the audience in the brief should do now, and where in the report to find what they need}}</p></r-line>
+</r-summary>
+
+<r-toc></r-toc>
+
+<r-section title="{{Outline row 2: the answer to the reader's next question}}">
+  <r-text><p>{{One to three sentences that lead into the visual below.}}</p></r-text>
+  <r-diagram src="diagrams/{{name}}.mmd" caption="{{What the diagram shows}}"></r-diagram>
+</r-section>
+
+</body>
+</html>

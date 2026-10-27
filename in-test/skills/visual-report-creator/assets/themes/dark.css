@@ -1,0 +1,32 @@
+/* Theme: dark. Same variables as light.css; see there for how themes work. */
+:root {
+  --theme-mode: dark;
+  --font-sans: Arial, Helvetica, "Liberation Sans", Arimo, sans-serif;
+  --font-mono: "Courier New", "Liberation Mono", Cousine, monospace;
+
+  --color-bg: #12161d;
+  --color-surface: #1c222c;
+  --color-surface-2: #252d39;
+  --color-text: #e6eaf0;
+  --color-muted: #9aa5b5;
+  --color-border: #333c4a;
+  --color-accent: #6b9cff;
+
+  --color-ok: #3cc47c;
+  --color-warn: #f0aa2c;
+  --color-fail: #f06a6a;
+
+  /* soft fills for semantic classes: node fills, highlighted rows */
+  --color-ok-soft: #163526;
+  --color-warn-soft: #3a2e14;
+  --color-fail-soft: #3d1f22;
+  --color-accent-soft: #1c2b4a;
+  --color-muted-soft: #232a35;
+
+  --color-series-1: #6b9cff;
+  --color-series-2: #3cc47c;
+  --color-series-3: #f0aa2c;
+  --color-series-4: #b48cf2;
+  --color-series-5: #f06a6a;
+  --color-series-6: #4cc9db;
+}

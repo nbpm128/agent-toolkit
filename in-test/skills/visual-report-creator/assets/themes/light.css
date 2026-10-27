@@ -1,0 +1,36 @@
+/* Theme: light. A theme is this fixed set of variables; copy the file and change the values to
+ * add one. Mermaid and ECharts read these at render time, so one file styles text, diagrams and
+ * charts alike. A theme may ship font files next to it (static/fonts/) and reference them with
+ * @font-face url(fonts/...); build inlines them. The default stack is metric-compatible across
+ * Windows, macOS and Linux, so node sizes do not shift between machines. */
+:root {
+  --theme-mode: light;
+  --font-sans: Arial, Helvetica, "Liberation Sans", Arimo, sans-serif;
+  --font-mono: "Courier New", "Liberation Mono", Cousine, monospace;
+
+  --color-bg: #ffffff;
+  --color-surface: #f4f6f9;
+  --color-surface-2: #e9edf3;
+  --color-text: #1b2330;
+  --color-muted: #5b6676;
+  --color-border: #d5dbe4;
+  --color-accent: #2f6fde;
+
+  --color-ok: #1f9d55;
+  --color-warn: #d98c00;
+  --color-fail: #d64545;
+
+  /* soft fills for semantic classes: node fills, highlighted rows */
+  --color-ok-soft: #e3f5ea;
+  --color-warn-soft: #fdf1dc;
+  --color-fail-soft: #fbe4e4;
+  --color-accent-soft: #e4edfc;
+  --color-muted-soft: #eef0f3;
+
+  --color-series-1: #2f6fde;
+  --color-series-2: #1f9d55;
+  --color-series-3: #d98c00;
+  --color-series-4: #8a4fd6;
+  --color-series-5: #d64545;
+  --color-series-6: #1aa3b8;
+}
